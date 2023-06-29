@@ -1,19 +1,17 @@
-#[derive(Debug)]
-struct TodoItem<'a> {
-    title: &'a str,
-}
+use todo::TodoList;
 
-impl<'a> TodoItem<'a> {
-    fn new(title: &'a str) -> Self {
-        Self { title }
-    }
+use crate::todo::TodoItem;
 
-    fn edit(&mut self, title: &'a str) {
-        self.title = title;
-    }
-}
+mod todo;
 
 fn main() {
-    let item = TodoItem::new("I have to clean the bathroom");
-    eprintln!("{:?}", item);
+    let mut item = TodoItem::new("I have to clean the bathroom");
+    let new_title = format!("{} {}", item.title, "with some additions");
+    item.title = &new_title;
+    item.done = true;
+
+    let mut list = TodoList::default();
+    list.add(item);
+
+    eprint!("{:?}", list);
 }
