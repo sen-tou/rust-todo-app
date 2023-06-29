@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{fmt::format, ops::Deref};
 
 #[derive(Debug)]
 pub struct TodoItem<'a> {
@@ -26,12 +26,16 @@ impl<'a> TodoList<'a> {
     pub fn add(&mut self, item: TodoItem<'a>) -> () {
         self.collection.push(item);
     }
-}
 
-impl<'a> Deref for TodoList<'a> {
-    type Target = Vec<TodoItem<'a>>;
+    pub fn show(&self) -> Vec<String> {
+        self.collection
+            .iter()
+            .enumerate()
+            .map(|(index, item)| {
+                let x = if item.done { "x" } else { " " };
 
-    fn deref(&self) -> &Self::Target {
-        &self.collection
+                format!("{}: [{}] {}", index, x, item.title)
+            })
+            .collect()
     }
 }

@@ -10,8 +10,11 @@ fn main() {
     item.title = &new_title;
     item.done = true;
 
+    let another = TodoItem::new("Make bed.");
+
     let mut list = TodoList::default();
     list.add(item);
+    list.add(another);
 
-    eprint!("{:?}", list);
+    eprintln!("{:?}", list.show());
 }
