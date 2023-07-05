@@ -16,12 +16,11 @@ fn main() {
 
     let another = TodoItem::new("Make bed.");
 
-    let mut list = TodoList::default();
-    list.add(item);
-    list.add(another);
+    let mut todo_list = TodoList::default();
+    todo_list.add(item);
+    todo_list.add(another);
 
     let command_args: Vec<String> = env::args().skip(1).collect();
-    if let Ok(mut command) = Commands::from_str(command_args.get(0).unwrap()) {
-        command.exec(list);
-    };
+    let mut command = Commands::new(todo_list);
+    command.exec(command_args.get(0).unwrap());
 }

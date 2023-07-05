@@ -1,34 +1,30 @@
-use std::error::Error;
-
 use crate::todo::TodoList;
 
 pub const LIST: &str = "l";
 pub const CHECK: &str = "c";
+pub const ADD: &str = "a";
 
 #[derive(Debug)]
-pub enum Commands {
-    List,
-    Check,
+pub struct Commands<'a> {
+    todo_list: TodoList<'a>,
 }
 
-impl Commands {
-    pub fn from_str(command: &str) -> Result<Self, Box<dyn Error>> {
+impl<'a> Commands<'a> {
+    pub fn new(mut todo_list: TodoList<'a>) -> Self {
+        Self { todo_list }
+    }
+
+    pub fn exec(&mut self, command: &str) {
         match command {
-            LIST => Ok(Self::List),
-            CHECK => Ok(Self::Check),
-            _ => panic!("Command {} not found.", command),
+            LIST => self.list(),
+            CHECK => self.check(),
+            ADD => self.add(),
+            _ => todo!(),
         }
     }
 
-    pub fn exec(&mut self, todo_list: TodoList) {
-        match *self {
-            Self::List => self.list(todo_list),
-            Self::Check => self.check(),
-        }
-    }
-
-    fn list(&self, todo_list: TodoList) {
-        for item in todo_list.as_vec() {
+    fn list(&self) {
+        for item in self.todo_list.as_vec() {
             println!("{}", item);
         }
     }
@@ -36,4 +32,6 @@ impl Commands {
     fn check(&mut self) {
         todo!()
     }
+
+    fn add(&mut self) {}
 }
