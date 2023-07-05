@@ -1,5 +1,3 @@
-
-
 #[derive(Debug)]
 pub struct TodoItem<'a> {
     pub title: &'a str,
@@ -27,7 +25,7 @@ impl<'a> TodoList<'a> {
         self.collection.push(item);
     }
 
-    pub fn show(&self) -> Vec<String> {
+    pub fn as_vec(&self) -> Vec<String> {
         self.collection
             .iter()
             .enumerate()

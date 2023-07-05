@@ -6,7 +6,7 @@ with the rust lang.
 ## Features
 
 - [ ] add/remove/edit todo item
-- [ ] show list of todos
+- [x] show list of todos
 - [ ] tick them when finished
 - [ ] interactive mode?
 - [ ] persist and read them from a json file

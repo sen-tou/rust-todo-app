@@ -2,7 +2,7 @@ use std::env;
 
 use todo::TodoList;
 
-use crate::command::{Commands, LIST};
+use crate::command::Commands;
 use crate::todo::TodoItem;
 
 mod command;
@@ -21,8 +21,7 @@ fn main() {
     list.add(another);
 
     let command_args: Vec<String> = env::args().skip(1).collect();
-    let command = Commands::from_str(command_args.get(1).or(Some(&LIST.to_owned())).unwrap());
-
-    eprintln!("{:?}", command);
-    eprintln!("{:?}", list.show());
+    if let Ok(mut command) = Commands::from_str(command_args.get(0).unwrap()) {
+        command.exec(list);
+    };
 }
