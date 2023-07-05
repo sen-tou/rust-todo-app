@@ -20,7 +20,6 @@ fn main() {
     todo_list.add(item);
     todo_list.add(another);
 
-    let command_args: Vec<String> = env::args().skip(1).collect();
     let mut command = Commands::new(todo_list);
-    command.exec(command_args.get(0).unwrap());
+    command.exec();
 }

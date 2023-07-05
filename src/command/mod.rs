@@ -1,4 +1,6 @@
-use crate::todo::TodoList;
+use std::env::{self, Args};
+
+use crate::todo::{TodoItem, TodoList};
 
 pub const LIST: &str = "l";
 pub const CHECK: &str = "c";
@@ -6,19 +8,23 @@ pub const ADD: &str = "a";
 
 #[derive(Debug)]
 pub struct Commands<'a> {
+    command_args: Args,
     todo_list: TodoList<'a>,
 }
 
 impl<'a> Commands<'a> {
     pub fn new(mut todo_list: TodoList<'a>) -> Self {
-        Self { todo_list }
+        Self {
+            command_args: env::args(),
+            todo_list,
+        }
     }
 
-    pub fn exec(&mut self, command: &str) {
-        match command {
-            LIST => self.list(),
-            CHECK => self.check(),
-            ADD => self.add(),
+    pub fn exec(&mut self) {
+        match self.command_args.nth(1).as_deref() {
+            Some(LIST) => self.list(),
+            Some(CHECK) => self.check(),
+            Some(ADD) => self.add(),
             _ => todo!(),
         }
     }
@@ -33,5 +39,8 @@ impl<'a> Commands<'a> {
         todo!()
     }
 
-    fn add(&mut self) {}
+    fn add(&mut self) {
+        let item = TodoItem::new(&self.command_args.nth(2).expect("Title not provided."));
+        self.todo_list.add(item)
+    }
 }
