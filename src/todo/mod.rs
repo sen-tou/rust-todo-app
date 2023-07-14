@@ -1,12 +1,15 @@
 #[derive(Debug)]
-pub struct TodoItem<'a> {
-    pub title: &'a str,
+pub struct TodoItem {
+    pub title: String,
     pub done: bool,
 }
 
-impl<'a> TodoItem<'a> {
-    pub fn new(title: &'a str) -> Self {
-        Self { title, done: false }
+impl TodoItem {
+    pub fn new(title: &str) -> Self {
+        Self {
+            title: title.to_string(),
+            done: false,
+        }
     }
 }
 
@@ -16,12 +19,12 @@ impl<'a> TodoItem<'a> {
 // completed just like todo items. This way we could get rid of the lifetime
 // I will not however to be able to work with lifetimes is this example
 #[derive(Default, Debug)]
-pub struct TodoList<'a> {
-    collection: Vec<TodoItem<'a>>,
+pub struct TodoList {
+    collection: Vec<TodoItem>,
 }
 
-impl<'a> TodoList<'a> {
-    pub fn add(&mut self, item: TodoItem<'a>) -> () {
+impl TodoList {
+    pub fn add(&mut self, item: TodoItem) -> () {
         self.collection.push(item);
     }
 

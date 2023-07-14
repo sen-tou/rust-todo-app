@@ -7,13 +7,13 @@ pub const CHECK: &str = "c";
 pub const ADD: &str = "a";
 
 #[derive(Debug)]
-pub struct Commands<'a> {
+pub struct Commands {
     command_args: Args,
-    todo_list: TodoList<'a>,
+    todo_list: TodoList,
 }
 
-impl<'a> Commands<'a> {
-    pub fn new(mut todo_list: TodoList<'a>) -> Self {
+impl Commands {
+    pub fn new(mut todo_list: TodoList) -> Self {
         Self {
             command_args: env::args(),
             todo_list,
