@@ -1,4 +1,7 @@
-#[derive(Debug)]
+use serde::Deserialize;
+use serde::Serialize;
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TodoItem {
     pub title: String,
     pub done: bool,
@@ -13,12 +16,7 @@ impl TodoItem {
     }
 }
 
-// It's reasonable to not have this list generic because we can assume that
-// a todo list always contains todo items
-// We could implement a trait say Completable that abstracts items that can be
-// completed just like todo items. This way we could get rid of the lifetime
-// I will not however to be able to work with lifetimes is this example
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct TodoList {
     collection: Vec<TodoItem>,
 }
