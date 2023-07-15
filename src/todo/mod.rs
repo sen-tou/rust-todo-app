@@ -18,6 +18,7 @@ impl TodoItem {
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct TodoList {
+    #[serde(default)]
     collection: Vec<TodoItem>,
 }
 

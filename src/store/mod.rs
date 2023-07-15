@@ -1,6 +1,7 @@
 use std::{
     fs::{create_dir_all, OpenOptions},
-    io::Read,
+    io::{Read, Write},
+    path::{Path, PathBuf},
 };
 
 use dirs::home_dir;
@@ -19,38 +20,32 @@ pub enum StoreError {
 
 impl Store {
     pub fn from_file(file_name: Option<&str>) -> Self {
-        let mut folder = match home_dir() {
-            Some(folder) => folder,
-            None => panic!("Cannot fetch the home dir!"),
-        };
-
+        let mut folder = home_dir().expect("Cannot find home folder");
         folder.push(".todo-store");
-
-        match create_dir_all(folder) {
-            Err(err) => panic!("{}", err),
-            _ => (),
-        };
+        create_dir_all(&folder).expect("Cannot create config folder");
 
         let file_name = match file_name {
             Some(file_name) => file_name,
             None => "store.json",
         };
+        let mut file_path = folder.clone();
+        file_path.push(file_name);
+        dbg!(&file_path);
 
-        let mut file = match OpenOptions::new().read(true).create(true).open(file_name) {
-            Ok(file) => file,
-            Err(err) => panic!("{}", err),
-        };
+        let mut file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open(file_path)
+            .expect("Cannot open file");
 
         let mut data = String::new();
-        match file.read_to_string(&mut data) {
-            Err(err) => panic!("{}", err),
-            _ => (),
-        };
+        file.read_to_string(&mut data).expect("Cannot read file");
+        if data.is_empty() {
+            data = "{}".to_owned();
+        }
 
-        let todo_list = match serde_json::from_str(&data) {
-            Ok(todo_list) => todo_list,
-            Err(err) => panic!("{}", err),
-        };
+        let todo_list = serde_json::from_str(&data).expect("Cannot convert json to TodoList");
 
         Self {
             todo_list,
@@ -58,20 +53,20 @@ impl Store {
         }
     }
 
-    fn save(&self) -> Result<(), StoreError> {
-        let json = match serde_json::to_string(&self.todo_list) {
-            Ok(json) => json,
-            Err(_) => panic!("cannot convert todo list to json"),
-        };
+    pub fn save(&self) -> Result<(), StoreError> {
+        let json =
+            serde_json::to_string(&self.todo_list).expect("Cannot convert todo list to json");
 
-        let mut file = match OpenOptions::new()
+        let mut file = OpenOptions::new()
             .read(true)
+            .write(true)
             .create(true)
             .open(&self.file_name)
-        {
-            Ok(file) => file,
-            Err(err) => panic!("cannot open file"),
-        };
+            .expect("Cannot open file");
+
+        dbg!(&json);
+
+        write!(file, "{}", json).expect("Cant write to file");
 
         Ok(())
     }
