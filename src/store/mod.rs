@@ -54,13 +54,10 @@ impl Store {
         let json =
             serde_json::to_string(&self.todo_list).expect("Cannot convert todo list to json");
 
-        dbg!(&json);
-
         let mut file = OpenOptions::new()
             .read(true)
             .write(true)
             .create(true)
-            .truncate(true)
             .open(&self.location)
             .expect("Cannot open file");
 
