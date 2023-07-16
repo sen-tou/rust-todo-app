@@ -9,8 +9,12 @@ with the rust lang.
 - [x] show list of todos
 - [ ] tick them when finished
 - [ ] interactive mode?
-- [ ] persist and read them from a json file
+- [x] persist and read them from a json file
 - [ ] write some tests
+- [x] some error handling
+- [ ] show help text
+  - [x] overview
+  - [ ] examples for all
 
 ## Running
 

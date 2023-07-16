@@ -1,15 +1,18 @@
+use anyhow::Result;
 use store::Store;
 
 use crate::command::Commands;
 
 mod command;
+mod error;
 mod store;
 mod todo;
 
-fn main() {
-    let mut store = Store::default();
+fn main() -> Result<()> {
+    let mut store = Store::from_file(None)?;
     let todo_list = &mut store.todo_list;
     let mut command = Commands::new(todo_list);
-    command.exec();
-    let _ = store.save();
+
+    command.exec()?;
+    store.save()
 }
