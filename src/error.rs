@@ -2,8 +2,6 @@
 pub enum TodoError {
     #[error("Maximum number of {0} todos reached.")]
     MaximumNumberOfTodosReached(usize),
-    #[error("Unable to operate on store file: {0}")]
-    StoreFileError(String),
     #[error("Cannot find todo with index: {0}.")]
     TodoItemNotFound(usize),
     #[error("Some command arguments are missing. Please use h command to get help.")]
