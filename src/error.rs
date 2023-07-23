@@ -5,7 +5,7 @@ pub enum TodoError {
     #[error("Cannot find todo with index: {0}.")]
     TodoItemNotFound(usize),
     #[error("Some command arguments are missing. Please use h command to get help.")]
-    MissingCommandArgs,
+    MissingCommandArgs(String),
     #[error("There is no command with name: {0}. Please use h command to get help.")]
     NoCommand(String),
     #[error("Some error happened: {0}")]

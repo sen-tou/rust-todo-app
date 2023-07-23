@@ -14,6 +14,7 @@ pub const LIST: &str = "l";
 pub const CHECK: &str = "c";
 pub const ADD: &str = "a";
 pub const REMOVE: &str = "r";
+pub const EDIT: &str = "e";
 
 #[derive(Debug)]
 pub struct Commands<'a> {
@@ -36,6 +37,7 @@ impl<'a> Commands<'a> {
             Some(CHECK) => self.check(),
             Some(ADD) => self.add(),
             Some(REMOVE) => self.remove(),
+            Some(EDIT) => self.edit(),
             Some(unknown) => Err(TodoError::NoCommand(unknown.to_owned()))?,
             None => Err(TodoError::NoCommand("None".to_owned()))?,
         }
@@ -66,10 +68,11 @@ todo command help:
     }
 
     fn remove(&mut self) -> Result<()> {
-        let index_str = self
-            .command_args
-            .get(2)
-            .ok_or_else(|| TodoError::MissingCommandArgs)?;
+        let index_str = self.command_args.get(2).ok_or_else(|| {
+            TodoError::MissingCommandArgs(
+                "Specify the index of the todo you want to delete.".to_owned(),
+            )
+        })?;
 
         let index = index_str
             .parse()
@@ -79,10 +82,11 @@ todo command help:
     }
 
     fn check(&mut self) -> Result<()> {
-        let index_str = self
-            .command_args
-            .get(2)
-            .ok_or_else(|| TodoError::MissingCommandArgs)?;
+        let index_str = self.command_args.get(2).ok_or_else(|| {
+            TodoError::MissingCommandArgs(
+                "Specify the index of the todo you want to check.".to_owned(),
+            )
+        })?;
 
         let index = index_str
             .parse()
@@ -92,9 +96,37 @@ todo command help:
     }
 
     fn add(&mut self) -> Result<()> {
+        if self.command_args.len() < 3 {
+            return Err(TodoError::Other(
+                "Please provide a title for the todo item.".to_owned(),
+            ))?;
+        }
+
         let joined = self.command_args[2..].join(" ");
         let item = TodoItem::new(&joined);
 
         self.todo_list.add(item)
+    }
+
+    fn edit(&mut self) -> Result<()> {
+        let index_str = self.command_args.get(2).ok_or_else(|| {
+            TodoError::MissingCommandArgs(
+                "Specify the index of the todo you want to edit.".to_owned(),
+            )
+        })?;
+
+        let index = index_str
+            .parse()
+            .map_err(|err: ParseIntError| TodoError::Other(err.to_string()))?;
+
+        if self.command_args.len() < 4 {
+            return Err(TodoError::Other(
+                "Please provide a title for the todo item.".to_owned(),
+            ))?;
+        };
+
+        let changed_title = self.command_args[3..].join(" ");
+
+        self.todo_list.edit(index, changed_title)
     }
 }

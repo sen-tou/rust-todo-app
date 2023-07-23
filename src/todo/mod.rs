@@ -38,10 +38,22 @@ impl TodoList {
         Ok(())
     }
 
+    pub fn edit(&mut self, index: usize, changed_title: String) -> Result<()> {
+        match self.collection.get_mut(index) {
+            Some(item) => {
+                item.title = changed_title.to_owned();
+
+                Ok(())
+            }
+            None => Err(TodoError::TodoItemNotFound(index))?,
+        }
+    }
+
     pub fn remove(&mut self, index: usize) -> Result<()> {
         match self.collection.get(index) {
             Some(_) => {
                 self.collection.remove(index);
+
                 Ok(())
             }
             None => Err(TodoError::TodoItemNotFound(index))?,
@@ -53,6 +65,7 @@ impl TodoList {
             Some(item) => {
                 let toggle = !item.done;
                 item.done = toggle;
+
                 Ok(())
             }
             None => Err(TodoError::TodoItemNotFound(index))?,

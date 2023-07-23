@@ -5,7 +5,7 @@ with the rust lang.
 
 ## Features
 
-- [ ] add/remove/edit todo item
+- [x] add/remove/edit todo item
 - [x] show list of todos
 - [x] tick them when finished
 - [ ] interactive mode?
