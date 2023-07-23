@@ -53,6 +53,7 @@ todo command help:
     - c: check a todo when ready
     - a: add a todo to the list 
     - r: remove a todo from the list
+    - e: edit a todo
 "#
         );
 

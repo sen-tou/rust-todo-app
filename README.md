@@ -19,5 +19,24 @@ with the rust lang.
 ## Running
 
 ```bash
-cargo run
+cargo build --release
+
+# show help
+./target/release/rust-todo-app h
+
+# show list of todos (default storage is ~/.todo-store/store.json)
+./target/release/rust-todo-app h
+
+# add a todo to the list
+./target/release/rust-todo-app a A new Todo
+./target/release/rust-todo-app a "Another one"
+
+# edit a todo (index)
+./target/release/rust-todo-app e 3 "This is the title I replace the original one with"
+
+# remove a todo (index)
+./target/release/rust-todo-app r 1
+
+# check/mark as done (index)
+./target/release/rust-todo-app c 1
 ```
