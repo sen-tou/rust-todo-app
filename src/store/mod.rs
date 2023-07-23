@@ -7,7 +7,7 @@ use std::{
 
 use dirs::home_dir;
 
-use crate::{error::TodoError, todo::TodoList};
+use crate::todo::TodoList;
 
 pub struct Store {
     pub todo_list: TodoList,
@@ -18,7 +18,7 @@ impl Store {
     pub fn from_file(file_name: Option<&str>) -> Result<Self> {
         let mut folder = home_dir().expect("Cannot open file");
         folder.push(".todo-store");
-        create_dir_all(&folder).map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+        create_dir_all(&folder)?;
 
         let file_name = match file_name {
             Some(file_name) => file_name,
@@ -31,19 +31,18 @@ impl Store {
             .read(true)
             .write(true)
             .create(true)
-            .open(&location)
-            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+            .open(&location)?;
 
         let mut data = String::new();
-        file.read_to_string(&mut data)
-            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+        file.read_to_string(&mut data)?;
 
+        data = data.trim().to_owned();
         if data.trim().is_empty() {
             data = "{}".to_owned();
         }
+        dbg!(&data);
 
-        let todo_list = serde_json::from_str(&data)
-            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+        let todo_list = serde_json::from_str(&data)?;
 
         Ok(Self {
             todo_list,
@@ -52,17 +51,16 @@ impl Store {
     }
 
     pub fn save(&self) -> Result<()> {
-        let json = serde_json::to_string(&self.todo_list)
-            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+        let json = serde_json::to_string(&self.todo_list)?;
 
         let mut file = OpenOptions::new()
             .read(true)
             .write(true)
             .create(true)
-            .open(&self.location)
-            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+            .truncate(true)
+            .open(&self.location)?;
 
-        write!(file, "{}", json).map_err(|err| TodoError::StoreFileError(err.to_string()))?;
+        write!(file, "{}", json)?;
 
         Ok(())
     }
