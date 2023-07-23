@@ -25,7 +25,7 @@ cargo build --release
 ./target/release/rust-todo-app h
 
 # show list of todos (default storage is ~/.todo-store/store.json)
-./target/release/rust-todo-app h
+./target/release/rust-todo-app l
 
 # add a todo to the list
 ./target/release/rust-todo-app a A new Todo
