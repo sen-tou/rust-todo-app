@@ -42,7 +42,8 @@ impl Store {
             data = "{}".to_owned();
         }
 
-        let todo_list = serde_json::from_str(&data).expect("Cannot convert json to TodoList");
+        let todo_list = serde_json::from_str(&data)
+            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
 
         Ok(Self {
             todo_list,
@@ -51,17 +52,17 @@ impl Store {
     }
 
     pub fn save(&self) -> Result<()> {
-        let json =
-            serde_json::to_string(&self.todo_list).expect("Cannot convert todo list to json");
+        let json = serde_json::to_string(&self.todo_list)
+            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
 
         let mut file = OpenOptions::new()
             .read(true)
             .write(true)
             .create(true)
             .open(&self.location)
-            .expect("Cannot open file");
+            .map_err(|err| TodoError::StoreFileError(err.to_string()))?;
 
-        write!(file, "{}", json).expect("Cant write to file");
+        write!(file, "{}", json).map_err(|err| TodoError::StoreFileError(err.to_string()))?;
 
         Ok(())
     }

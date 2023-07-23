@@ -7,7 +7,7 @@ with the rust lang.
 
 - [ ] add/remove/edit todo item
 - [x] show list of todos
-- [ ] tick them when finished
+- [x] tick them when finished
 - [ ] interactive mode?
 - [x] persist and read them from a json file
 - [ ] write some tests
